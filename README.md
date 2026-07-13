@@ -10,7 +10,9 @@ County Field Map is a single-purpose county classification ledger. It divides Ka
 - Green: discovered; the cell contains useful roads, water, or buildings
 - Black: muted void; the cell contains no useful information
 
-Clicking a practical cell marks it discovered. Select a cell and use **Mute selected sector** to mark it black. **Return to undiscovered** corrects a classification.
+Clicking a practical cell marks it discovered. Shift-clicking marks it muted immediately. Select a cell and use **Mute selected sector** to mark it black. **Return to undiscovered** corrects a classification.
+
+At the final 8 × 8 level, **Mute all 64 cells** marks the entire current inspection grid as muted after confirmation.
 
 An inspection cell turns green when all 64 practical cells are classified. A main sector turns green when all 256 inspection cells are complete.
 
