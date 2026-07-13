@@ -69,6 +69,9 @@ h2 { margin: 0 0 0.7rem; font-size: 0.82rem; letter-spacing: 0.06em; text-transf
 .button + .button { margin-top: 0.55rem; }
 .button-dark { background: #090b0f; color: #fff; border-color: #090b0f; }
 .button-dark:hover:not(:disabled) { background: #000; }
+.button-danger { background: #b42318; color: #fff; border-color: #8f1d14; }
+.button-danger:hover:not(:disabled) { background: #8f1d14; }
+.bulk-action { margin-top: 0.9rem; }
 
 .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 0.55rem; }
 .button-row .button { margin: 0; }
