@@ -14,6 +14,7 @@
     resetView: document.getElementById("resetView"),
     muteSelected: document.getElementById("muteSelected"),
     returnUndiscovered: document.getElementById("returnUndiscovered"),
+    muteInspection: document.getElementById("muteInspection"),
     levelStatus: document.getElementById("levelStatus"),
     selectionStatus: document.getElementById("selectionStatus"),
     sectorProgress: document.getElementById("sectorProgress"),
@@ -63,6 +64,7 @@
     elements.resetView.addEventListener("click", () => renderer.resetView());
     elements.muteSelected.addEventListener("click", () => classifySelected(K.STATE.MUTED));
     elements.returnUndiscovered.addEventListener("click", () => classifySelected(K.STATE.UNDISCOVERED));
+    elements.muteInspection.addEventListener("click", () => muteCurrentInspection());
     global.addEventListener("beforeunload", () => store.flush());
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") store.flush();
@@ -78,7 +80,7 @@
     store.onStatus(({ kind, message }) => setStorageStatus(kind, message));
   }
 
-  async function handleMapClick(point) {
+  async function handleMapClick(point, modifiers = {}) {
     const level = renderer.level();
     if (level === "county") {
       const sector = G.pointToSector(point);
@@ -96,7 +98,8 @@
     const practical = G.pointToPractical(point, sector, inspection.row, inspection.col);
     if (!practical) return;
     selectedPractical = practical;
-    store.setState(sector, practical.index, K.STATE.DISCOVERED);
+    const nextState = modifiers.shiftKey ? K.STATE.MUTED : K.STATE.DISCOVERED;
+    store.setState(sector, practical.index, nextState);
     renderer.setSelectedPractical(practical);
     updateUi();
   }
@@ -159,6 +162,18 @@
     updateUi();
   }
 
+  function muteCurrentInspection() {
+    if (renderer.level() !== "practical") return;
+    const sector = renderer.selectedSector();
+    const inspection = renderer.selectedInspection();
+    if (!sector || !inspection) return;
+    const confirmed = global.confirm(
+      "Mute all 64 practical cells in this 8 × 8 grid? This replaces discovered cells with muted voids."
+    );
+    if (!confirmed) return;
+    store.setInspectionState(sector, inspection.row, inspection.col, K.STATE.MUTED);
+  }
+
   function updateUi() {
     if (!renderer) return;
     const level = renderer.level();
@@ -168,6 +183,7 @@
     elements.backView.disabled = level === "county";
     elements.muteSelected.disabled = !selectedPractical || level !== "practical";
     elements.returnUndiscovered.disabled = !selectedPractical || level !== "practical";
+    elements.muteInspection.disabled = level !== "practical";
 
     if (level === "county") {
       elements.levelStatus.textContent = "County — select one of the 16 sectors";
@@ -189,7 +205,9 @@
     const detail = store.inspectionSummary(sector, inspection.row, inspection.col);
     elements.levelStatus.textContent = `${sector} / inspection ${inspection.row + 1}-${inspection.col + 1}`;
     elements.inspectionProgress.textContent = `${detail.classified} of 64 practical cells classified; ${detail.remaining} undiscovered.`;
-    elements.selectionStatus.textContent = selectedPractical ? selectedText(selectedPractical) : "Click a practical cell to mark it discovered.";
+    elements.selectionStatus.textContent = selectedPractical
+      ? selectedText(selectedPractical)
+      : "Click to discover; Shift-click to mute.";
   }
 
   function countyProgressText() {

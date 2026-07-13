@@ -261,11 +261,13 @@
       let last = null;
       let start = null;
       let moved = false;
+      let clickModifiers = null;
       canvas.addEventListener("pointerdown", (event) => {
         pointerId = event.pointerId;
         last = [event.clientX, event.clientY];
         start = last.slice();
         moved = false;
+        clickModifiers = { shiftKey: event.shiftKey === true };
         canvas.setPointerCapture(pointerId);
       });
       canvas.addEventListener("pointermove", (event) => {
@@ -283,15 +285,21 @@
       canvas.addEventListener("pointerup", (event) => {
         if (event.pointerId !== pointerId) return;
         canvas.releasePointerCapture(pointerId);
-        if (!moved && clickHandler) clickHandler(viewport.screenToWorld(event.clientX, event.clientY));
+        if (!moved && clickHandler) {
+          clickHandler(viewport.screenToWorld(event.clientX, event.clientY), {
+            shiftKey: event.shiftKey === true || Boolean(clickModifiers && clickModifiers.shiftKey)
+          });
+        }
         pointerId = null;
         last = null;
         start = null;
+        clickModifiers = null;
       });
       canvas.addEventListener("pointercancel", () => {
         pointerId = null;
         last = null;
         start = null;
+        clickModifiers = null;
       });
     }
 

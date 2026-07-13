@@ -12,39 +12,14 @@
     LEGACY_API_ROOT: "/__kane_map/sector-state",
     STORAGE_PATH: "project-data/sectors",
     LOCAL_PREFIX: "county-field-map.sector.v1.",
-
-    WORLD: Object.freeze({
-      minX: 0,
-      minY: 0,
-      maxX: 1400,
-      maxY: 900
-    }),
-
-    REFERENCE_GRID: Object.freeze({
-      rows: 4,
-      cols: 6,
-      startNorth: 11,
-      startEast: 5
-    }),
-
-    VALID_GRID: Object.freeze({
-      northMin: 11,
-      northMax: 14,
-      eastMin: 6,
-      eastMax: 9
-    }),
-
+    WORLD: Object.freeze({ minX: 0, minY: 0, maxX: 1400, maxY: 900 }),
+    REFERENCE_GRID: Object.freeze({ rows: 4, cols: 6, startNorth: 11, startEast: 5 }),
+    VALID_GRID: Object.freeze({ northMin: 11, northMax: 14, eastMin: 6, eastMax: 9 }),
     INSPECTION_SIZE: 16,
     PRACTICAL_SIZE: 8,
     PRACTICAL_PER_INSPECTION: 64,
     PRACTICAL_PER_SECTOR: 16384,
-
-    STATE: Object.freeze({
-      UNDISCOVERED: 0,
-      DISCOVERED: 1,
-      MUTED: 2
-    }),
-
+    STATE: Object.freeze({ UNDISCOVERED: 0, DISCOVERED: 1, MUTED: 2 }),
     COLORS: Object.freeze({
       background: "#111827",
       panel: "#f7f7f5",
