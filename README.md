@@ -64,3 +64,9 @@ macOS:
 ```
 
 Run the executable from the application root, or use `--root` to point to it.
+
+## Batch 004 behavior
+
+Opening an 8 × 8 practical grid changes only its still-undiscovered cells to
+Discovered/green. Existing muted/black cells remain muted. The grid is saved
+as one classification change group rather than 64 separate actions.
