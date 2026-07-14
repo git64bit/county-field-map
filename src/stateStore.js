@@ -63,6 +63,27 @@
       return changed;
     }
 
+    function discoverUndiscoveredInspection(sector, row, col) {
+      const record = requireRecord(sector);
+      if (!Number.isInteger(row) || row < 0 || row >= 16 ||
+          !Number.isInteger(col) || col < 0 || col >= 16) return 0;
+      const start = (row * 16 + col) * K.PRACTICAL_PER_INSPECTION;
+      let changed = 0;
+      for (let offset = 0; offset < K.PRACTICAL_PER_INSPECTION; offset += 1) {
+        const index = start + offset;
+        if (record.cells[index] !== K.STATE.UNDISCOVERED) continue;
+        updateCounts(record, index, K.STATE.UNDISCOVERED, K.STATE.DISCOVERED);
+        record.cells[index] = K.STATE.DISCOVERED;
+        changed += 1;
+      }
+      if (!changed) return 0;
+      record.updatedAt = new Date().toISOString();
+      saveLocalRecord(record);
+      scheduleDiskWrite(sector);
+      emitChange(sector, null, K.STATE.UNDISCOVERED, K.STATE.DISCOVERED);
+      return changed;
+    }
+
     function inspectionComplete(sector, row, col) {
       const record = requireRecord(sector);
       return record.inspectionCounts[row * 16 + col] === 64;
@@ -223,6 +244,7 @@
       getState,
       setState,
       setInspectionState,
+      discoverUndiscoveredInspection,
       inspectionComplete,
       sectorComplete,
       summary,

@@ -122,6 +122,7 @@
     try {
       const data = await loader.loadSector(sector);
       if (token !== transitionToken) return;
+      store.discoverUndiscoveredInspection(sector, inspection.row, inspection.col);
       renderer.showPractical(sector, inspection, data);
     } catch (error) {
       console.error("County Field Map sector load failed", error);
@@ -207,7 +208,7 @@
     elements.inspectionProgress.textContent = `${detail.classified} of 64 practical cells classified; ${detail.remaining} undiscovered.`;
     elements.selectionStatus.textContent = selectedPractical
       ? selectedText(selectedPractical)
-      : "Click to discover; Shift-click to mute.";
+      : "Practical cells load included/green; Shift-click or use Mute selected sector to make a cell black.";
   }
 
   function countyProgressText() {
